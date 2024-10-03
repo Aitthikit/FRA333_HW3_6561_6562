@@ -33,6 +33,7 @@ def endEffectorJacobianHW3(q:list[float])->list[float]:
     # Assign the tool frame to the robot
     robot.tool = tool_frame
     print(robot)
+    print(robot.fkine([0.0,0.0,0.0]))
     J_e = [robot.jacobe(q)[0],robot.jacobe(q)[1],robot.jacobe(q)[2]]
     return J_e,robot.jacobe(q)
 #==============================================================================================================#
