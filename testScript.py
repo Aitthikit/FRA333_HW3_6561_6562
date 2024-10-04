@@ -19,7 +19,7 @@ from math import pi,radians
 #     d_6 = 0.082
 #===========================================<ตรวจคำตอบข้อ 1>====================================================#
 #code here
-def endEffectorJacobianHW3(q:list[float])->list[float]:
+def proofOne(q:list[float])->list[float]:
     robot = rtb.DHRobot(
     [
         rtb.RevoluteMDH(d=0.0892 , offset = pi),
@@ -43,6 +43,22 @@ def endEffectorJacobianHW3(q:list[float])->list[float]:
 #==============================================================================================================#
 #===========================================<ตรวจคำตอบข้อ 3>====================================================#
 #code here
-
+def proofThree(q:list[float], w:list[float])->list[float]:
+    robot = rtb.DHRobot(
+    [
+        rtb.RevoluteMDH(d=0.0892 , offset = pi),
+        rtb.RevoluteMDH(alpha = pi/2 ),
+        rtb.RevoluteMDH(a=-0.425),
+    ],
+    name = "RRR_Robot"
+    )
+    tool_frame = SE3(-0.47443, -0.093,0.109) @ SE3.RPY(0.0,-pi/2,0.0)  # Adjust the position and orientation as needed
+    robot.tool = tool_frame
+    dummy = np.zeros(3)
+    g = np.array([0, 0, -9.81])
+    w = np.array(w)
+    tau = robot.rne(q,dummy,dummy,g,w)
+    return tau
 #==============================================================================================================#
-print(endEffectorJacobianHW3([0.0,0.0,0.0]))
+print(proofOne([0.0,0.0,0.0]))
+print(proofThree([0.0,0.0,0.0],[0.0,0.0,0.0,0.0,0.0,1.0]))
