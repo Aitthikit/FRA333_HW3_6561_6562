@@ -48,14 +48,11 @@ def checkSingularityHW3(q:list[float])->bool:
 #code here
 def computeEffortHW3(q:list[float], w:list[float])->list[float]:
     J_e = endEffectorJacobianHW3(q)
-    # J_re = J_e[:3,:]
     J_ret = np.transpose(J_e)
     w_t = np.array(w)
-    # print(w_t)
-    # print(J_ret)
     tau = J_ret @ w_t
     return tau
 #==============================================================================================================#
 # print(endEffectorJacobianHW3([0.0,0.0,0.0]))
 # print(checkSingularityHW3([-0.6,-math.pi/2,0.0]))
-print(computeEffortHW3([0.0,0.0,0.0],[1.0,0.0,0.0,0.0,0.0,0.0]))
+print(computeEffortHW3([0.0,0.0,0.0],[1.0,0.0,0.0,1.0,0.0,0.0]))
