@@ -16,7 +16,6 @@ import math
 #code here
 def endEffectorJacobianHW3(q:list[float])->list[float]:
     R,P,R_e,p_e = HW3_utils.FKHW3(q) # Get Rotation Matrix and Traslation Matrix from HW3_utils
-    
     p_01 = P[:,0]
     p_02 = P[:,1]
     p_03 = P[:,2]
