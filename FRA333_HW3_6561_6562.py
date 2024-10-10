@@ -82,4 +82,4 @@ ref = 1 # Reference frame 0:base 1:end-effector
 print(endEffectorJacobianHW3(q,ref))
 print(checkSingularityHW3(q,ref))
 print(computeEffortHW3(q,w,ref))
-#print each function output
+#print each function output 

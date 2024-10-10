@@ -33,35 +33,35 @@ robot.tool = tool_frame #add End-effector to robot
 #===========================================<ตรวจคำตอบข้อ 1>====================================================#
 #code here
 def proofOne(q:list[float],robot:rtb.DHRobot,ref:int)->bool:
-    J_e = hand.endEffectorJacobianHW3(q,ref)
-    if ref == 0:
-        J_ertb = robot.jacob0(q)
+    J_e = hand.endEffectorJacobianHW3(q,ref)#Get Jacobian Matrix from endEffectorJacobianHW3 function
+    if ref == 0:# Frame selection
+        J_ertb = robot.jacob0(q) # Jacobian Matrix of each joint reference to base frame
     else:    
-        J_ertb = robot.jacobe(q)
-    allow_error = 0.0001
+        J_ertb = robot.jacobe(q) # Jacobian Matrix of each joint reference to end-effector frame
+    allow_error = 0.0001 # Allowable error in Jacobian Matrix compare
     print("-----------Hand Jacobian-----------")
     print(J_e)
     print("-----------RTB Jacobian------------")
     print(J_ertb)
     print("------------Jacobian True or False------------")
-    return np.allclose(J_e, J_ertb, atol=allow_error)
+    return np.allclose(J_e, J_ertb, atol=allow_error) # Compare Jacobian Matrix from ans and from roboticstoolbox 
 #==============================================================================================================#
 #===========================================<ตรวจคำตอบข้อ 2>====================================================#
 #code here
 def proofTwo(q:list[float],robot:rtb.DHRobot,ref:int)->bool:
-    if ref == 0:
-        J = robot.jacob0(q)
+    if ref == 0:# Frame selection
+        J = robot.jacob0(q) # Jacobian Matrix of each joint reference to base frame
     else:    
-        J = robot.jacobe(q)
-    singularity = hand.checkSingularityHW3(q,ref)
-    if singularity == 1:
+        J = robot.jacobe(q) # Jacobian Matrix of each joint reference to end-effector frame
+    singularity = hand.checkSingularityHW3(q,ref)# Get Singularity flag from checkSingularityHW3 function
+    if singularity == 1:# Near Singularity == 1
         issingula = True
     else:
         issingula = False  
-    # singularity_rtb = robot.manipulability(J=J)
+    # singularity_rtb = robot.manipulability(J=J) #Check from manipulability(can test in only some case)
     J_r = J[:3,:] #Reduce Jacobian Matrix to made it can find det and inverse
-    singularity_rtb = base.det(J_r)
-    if abs(singularity_rtb) < 0.001:
+    singularity_rtb = base.det(J_r) # Find det of Jacobian Matrix from roboticstoolbox 
+    if abs(singularity_rtb) < 0.001:# Near Singularity < 0.001
         issingula_rtb = True
     else:
         issingula_rtb = False
@@ -70,30 +70,33 @@ def proofTwo(q:list[float],robot:rtb.DHRobot,ref:int)->bool:
     print("-----------RTB Singularity------------")
     print(issingula_rtb)
     print("------------Singularity True or False------------")
-    return issingula == issingula_rtb
+    return issingula == issingula_rtb #Compare Between checkSingularityHW3 and singularity_rtb
     
 #==============================================================================================================#
 #===========================================<ตรวจคำตอบข้อ 3>====================================================#
 #code here
 def proofThree(q:list[float], w:list[float],robot:rtb.DHRobot,ref:int)->bool:
-    tau = hand.computeEffortHW3(q,w,ref)
-    w = np.array(w)
-    if ref == 0:
-        J = robot.jacob0(q)
+    tau = hand.computeEffortHW3(q,w,ref)# Get tau from computeEffortHW3 function
+    w = np.array(w) #Change w to numpy array
+    if ref == 0:# Frame selection
+        J = robot.jacob0(q) # Jacobian Matrix of each joint reference to base frame
     else:    
-        J = robot.jacobe(q)
-    tau_rtb = robot.pay(w,J=J,frame = 0)
-    allow_error = 0.0001
+        J = robot.jacobe(q) # Jacobian Matrix of each joint reference to end-effector frame
+    tau_rtb = robot.pay(w,J=J,frame = 0)# Find tau from roboticstoolbox function (pay)
+    allow_error = 0.0001 # Allowable error in tau compare
     print("-----------Hand Effort-----------")
     print(tau)
     print("-----------RTB Effort------------")
     print(-tau_rtb)
     print("------------Effort True or False------------")
-    return np.allclose(tau, -tau_rtb, atol=allow_error)
+    return np.allclose(tau, -tau_rtb, atol=allow_error) # Compare tau from ans and from roboticstoolbox 
+    # tau_rtb need to multiply -1 because in library roboticstoolbox use - Jacobian Matrix transpose(in rtbPay.png)
 #==============================================================================================================#
-q = hand.q
-w = hand.w
-ref = hand.ref
+q = hand.q # Get q value from FRA333_HW3_6561_6562
+w = hand.w # Get w value from FRA333_HW3_6561_6562
+ref = hand.ref # Get ref value from FRA333_HW3_6561_6562
+
 print(proofOne(q,robot,ref))
 print(proofTwo(q,robot,ref))
 print(proofThree(q,w,robot,ref))
+#print each function output 
