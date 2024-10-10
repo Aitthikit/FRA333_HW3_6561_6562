@@ -68,3 +68,8 @@ This code is Calculation Jacobian Matrix from this DHparameter
 you can edit configulation space in this code at Input zone same line as Run Answers
 
 ![alt text](https://github.com/aitthikit/FRA333_HW3_6561_6562/blob/main/Picture/Input.png?raw=true)
+
+## Reference
+
+- [Roboticstoolbox github](https://github.com/petercorke/robotics-toolbox-python)
+- [Roboticstoolbox Documentation](https://petercorke.github.io/robotics-toolbox-python/index.html)
