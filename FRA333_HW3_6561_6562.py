@@ -41,7 +41,7 @@ def endEffectorJacobianHW3(q:list[float])->list[float]:
     J_01 = np.vstack((R_e0 @ base.cross(z_01,base.vector_diff(p_0e,p_01,'r')).reshape(3,1),z_e1))
     J_02 = np.vstack((R_e0 @ base.cross(z_02,base.vector_diff(p_0e,p_02,'r')).reshape(3,1),z_e2))
     J_03 = np.vstack((R_e0 @ base.cross(z_03,base.vector_diff(p_0e,p_03,'r')).reshape(3,1),z_e3))
-    #Create Jacobian Matrix of each joint reference to end-effector frame
+    #Create Jacobian Matrix of each joint reference to end-effector frame (Equation in Jacobian.jpg)
     J_e = np.hstack((J_01,J_02,J_03))
     #Stack Jacobian Matrix of each joint reference to end-effector frame to Matrix 6x3
     return J_e #Return Jacobian Matrix
@@ -67,8 +67,10 @@ def computeEffortHW3(q:list[float], w:list[float])->list[float]:
     return tau #Return Joint forces/torques due to w
 #==============================================================================================================#
 
+#==============================================Input===========================================================#
 q = [0.0,-math.pi/2,-0.2] #joint [joint1,joint2,joint3] recommend[0.0,-math.pi/2,-0.2] for singularity test
 w = [1.0,1.0,5.0,1.0,2.0,1.0]# wrench [Fx,Fy,Fz,Mx,My,Mz]
+#==============================================Input===========================================================#
 
 print(endEffectorJacobianHW3(q))
 print(checkSingularityHW3(q))

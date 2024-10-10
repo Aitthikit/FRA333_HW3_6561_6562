@@ -8,7 +8,7 @@
 import HW3_utils
 import roboticstoolbox as rtb
 import numpy as np
-from spatialmath import SE3
+from spatialmath import SE3,base
 from math import pi,radians
 import FRA333_HW3_6561_6562 as hand
 d_1 = 0.0892
@@ -49,8 +49,10 @@ def proofTwo(q:list[float],robot:rtb.DHRobot)->bool:
         issingula = True
     else:
         issingula = False  
-    singularity_rtb = robot.manipulability(J=J)
-    if singularity_rtb == 0:
+    # singularity_rtb = robot.manipulability(J=J)
+    J_r = J[:3,:] #Reduce Jacobian Matrix to made it can find det and inverse
+    singularity_rtb = base.det(J_r)
+    if abs(singularity_rtb) < 0.001:
         issingula_rtb = True
     else:
         issingula_rtb = False
@@ -67,7 +69,6 @@ def proofTwo(q:list[float],robot:rtb.DHRobot)->bool:
 def proofThree(q:list[float], w:list[float],robot:rtb.DHRobot)->bool:
     tau = hand.computeEffortHW3(q,w)
     w = np.array(w)
-    print(w)
     tau_rtb = robot.pay(w,J=robot.jacobe(q),frame = 0)
     allow_error = 0.0001
     print("-----------Hand Effort-----------")
