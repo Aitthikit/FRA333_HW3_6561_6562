@@ -42,10 +42,14 @@ you will see
 ![alt text](https://github.com/aitthikit/FRA333_HW3_6561_6562/blob/main/Picture/Answer.png?raw=true)
 - Jacobian matrix reference to end-effector frame (6x3 Matrix)
 - Is it near singularity (1)
-- tau value [joint 1,joint 2,joint 3] 
+- tau value [joint 1,joint 2,joint 3]
+  
 you can edit configulation space in this code at Input zone
+
 ![alt text](https://github.com/aitthikit/FRA333_HW3_6561_6562/blob/main/Picture/Input.png?raw=true)
+
 This code is Calculation Jacobian Matrix from this Equation
+
 ![alt text](https://github.com/aitthikit/FRA333_HW3_6561_6562/blob/main/Picture/Jacobian.jpg?raw=true)
 ![alt text](https://github.com/aitthikit/FRA333_HW3_6561_6562/blob/main/Picture/JacobianCal.png?raw=true)
 ## Run Test Scripts
@@ -56,7 +60,11 @@ you will see
 
 ![alt text](https://github.com/aitthikit/FRA333_HW3_6561_6562/blob/main/Picture/TestScriptsAns.png?raw=true)
 - Focus at All True or False this testScript are check by use roboticstoolbox for python
+  
 This code is Calculation Jacobian Matrix from this DHparameter
+
 ![alt text](https://github.com/aitthikit/FRA333_HW3_6561_6562/blob/main/Picture/DHrobot.png?raw=true)
+
 you can edit configulation space in this code at Input zone same line as Run Answers
+
 ![alt text](https://github.com/aitthikit/FRA333_HW3_6561_6562/blob/main/Picture/Input.png?raw=true)
