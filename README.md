@@ -38,6 +38,7 @@ You will see the file name
 python FRA333_HW3_6561_6562.py
 ```
 you will see
+
 ![alt text](https://github.com/aitthikit/FRA333_HW3_6561_6562/blob/main/Picture/Answer.png?raw=true)
 - Jacobian matrix reference to end-effector frame (6x3 Matrix)
 - Is it near singularity (1)
@@ -52,6 +53,7 @@ This code is Calculation Jacobian Matrix from this Equation
 python testScript.py
 ```
 you will see
+
 ![alt text](https://github.com/aitthikit/FRA333_HW3_6561_6562/blob/main/Picture/TestScriptsAns.png?raw=true)
 - Focus at All True or False this testScript are check by use roboticstoolbox for python
 This code is Calculation Jacobian Matrix from this DHparameter
