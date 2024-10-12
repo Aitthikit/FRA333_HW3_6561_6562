@@ -58,7 +58,8 @@ def proofTwo(q:list[float],robot:rtb.DHRobot,ref:int)->bool:
         issingula = True
     else:
         issingula = False  
-    # singularity_rtb = robot.manipulability(J=J) #Check from manipulability(can test in only some case)
+    singularity_rtb = robot.manipulability(J=J) #Check from manipulability(can test in only some case)
+    print(singularity_rtb)
     J_r = J[:3,:] #Reduce Jacobian Matrix to made it can find det and inverse
     singularity_rtb = base.det(J_r) # Find det of Jacobian Matrix from roboticstoolbox 
     if abs(singularity_rtb) < 0.001:# Near Singularity < 0.001
@@ -77,12 +78,20 @@ def proofTwo(q:list[float],robot:rtb.DHRobot,ref:int)->bool:
 #code here
 def proofThree(q:list[float], w:list[float],robot:rtb.DHRobot,ref:int)->bool:
     tau = hand.computeEffortHW3(q,w,ref)# Get tau from computeEffortHW3 function
-    w = np.array(w) #Change w to numpy array
     if ref == 0:# Frame selection
+        F_end = w[:3]   # Force in the end-effector frame
+        tau_end = w[3:] # Torque in the end-effector frame
+        R_e = robot.fkine(q).R
+        P_e = robot.fkine(q).t
+        F_base = R_e @ F_end
+        tau_base = R_e @ tau_end + np.cross(P_e, F_base)
+        w =  np.concatenate((F_base, tau_base))
         J = robot.jacob0(q) # Jacobian Matrix of each joint reference to base frame
-    else:    
+        tau_rtb = robot.pay(w,J=J,frame = 0)
+    else:
+        w = np.array(w) #Change w to numpy array    
         J = robot.jacobe(q) # Jacobian Matrix of each joint reference to end-effector frame
-    tau_rtb = robot.pay(w,J=J,frame = 0)# Find tau from roboticstoolbox function (pay)
+        tau_rtb = robot.pay(w,J=J,frame = 1)# Find tau from roboticstoolbox function (pay)
     allow_error = 0.0001 # Allowable error in tau compare
     print("-----------Hand Effort-----------")
     print(tau)

@@ -16,28 +16,34 @@ import math
 #code here
 def endEffectorJacobianHW3(q:list[float],ref:int)->list[float]:
     R,P,R_e,p_e = HW3_utils.FKHW3(q) # Get Rotation Matrix and Traslation Matrix from HW3_utils
+    
     p_01 = P[:,0]
     p_02 = P[:,1]
     p_03 = P[:,2]
     p_0e = p_e
     # Spilt position from base to joint 1 2 3 and end-effector
+    
     R_e0 = np.linalg.inv(R_e) # Inverse Rotation Matrix from base to end-effector to end-effector to base 
     R_e1 = R_e0 @ R[:,:,0]
     R_e2 = R_e0 @ R[:,:,1]
     R_e3 = R_e0 @ R[:,:,2]
     #Create Rotation Matrix from end-effector to joint 1 2 3
+    
     z_1 = np.array([0.0,0.0,1.0]).reshape(3,1)
     z_2 = np.array([0.0,0.0,1.0]).reshape(3,1)
     z_3 = np.array([0.0,0.0,1.0]).reshape(3,1)
     #Defind axis of joint rotation
+    
     z_01 = R[:,:,0] @ z_1
     z_02 = R[:,:,1] @ z_2
     z_03 = R[:,:,2] @ z_3
     #Create axis of joint rotation reference to base frame
+    
     z_e1 = R_e1 @ z_1
     z_e2 = R_e2 @ z_2
     z_e3 = R_e3 @ z_3
     #Create axis of joint rotation reference to end-effector frame
+    
     if ref == 0:
         J_01 = np.vstack((base.cross(z_01,base.vector_diff(p_0e,p_01,'r')).reshape(3,1),z_01))
         J_02 = np.vstack((base.cross(z_02,base.vector_diff(p_0e,p_02,'r')).reshape(3,1),z_02))
@@ -48,8 +54,10 @@ def endEffectorJacobianHW3(q:list[float],ref:int)->list[float]:
         J_02 = np.vstack((R_e0 @ base.cross(z_02,base.vector_diff(p_0e,p_02,'r')).reshape(3,1),z_e2))
         J_03 = np.vstack((R_e0 @ base.cross(z_03,base.vector_diff(p_0e,p_03,'r')).reshape(3,1),z_e3))
         #Create Jacobian Matrix of each joint reference to end-effector frame (Equation in Jacobian.jpg)
+        
     J_e = np.hstack((J_01,J_02,J_03))
     #Stack Jacobian Matrix of each joint reference to end-effector frame to Matrix 6x3
+    
     return J_e #Return Jacobian Matrix
 #==============================================================================================================#
 #=============================================<คำตอบข้อ 2>======================================================#
@@ -68,13 +76,26 @@ def checkSingularityHW3(q:list[float],ref:int)->bool:
 def computeEffortHW3(q:list[float], w:list[float],ref:int)->list[float]:
     J_e = endEffectorJacobianHW3(q,ref) #Get Jacobian Matrix from endEffectorJacobianHW3 function
     J_ret = np.transpose(J_e) #Transpose Jacobian Matrix
-    w_t = np.array(w) #Transpose wrench Matrix to 6x1
-    tau = J_ret @ w_t #Find tau from Transpose Jacobian Matrix dot wrench Matrix
+    if ref == 0:
+        R_e = HW3_utils.FKHW3(q)[2]
+        P_e = HW3_utils.FKHW3(q)[3]
+        F_end = w[:3]   # Force in the end-effector frame
+        tau_end = w[3:] # Torque in the end-effector frame
+    # Transform the force component (F_base = R_base_end * F_end)
+        F_base = R_e @ F_end
+    # Transform the torque component (tau_base = R_base_end * tau_end + (t_base_end x F_base))
+        tau_base = R_e @ tau_end + np.cross(P_e, F_base)
+    # Combine the transformed force and torque into a single wrench vector
+        w_t = np.concatenate((F_base, tau_base))
+        tau = J_ret @ w_t
+    else:
+        w_t = np.array(w) #Transpose wrench Matrix to 6x1
+        tau = J_ret @ w_t #Find tau from Transpose Jacobian Matrix dot wrench Matrix
     return tau #Return Joint forces/torques due to w
 #==============================================================================================================#
 
 #==============================================Input===========================================================#
-q = [0.0,-math.pi/2,-0.2] #joint [joint1,joint2,joint3] recommend[0.0,-math.pi/2,-0.2] for singularity test
+q = [0.0,-math.pi/2,0.0] #joint [joint1,joint2,joint3] recommend[0.0,-math.pi/2,-0.2] for singularity test
 w = [1.0,1.0,5.0,1.0,2.0,1.0] # wrench [Fx,Fy,Fz,Mx,My,Mz]
 ref = 1 # Reference frame 0:base 1:end-effector
 #==============================================Input===========================================================#
