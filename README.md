@@ -96,10 +96,9 @@ Code 3
 
 ![alt text](https://github.com/Aitthikit/FRA333_HW3_6561_6562/blob/main/Picture/Code3.png?raw=true)
 - Receive input value of q , w , ref 
-- Get Jacobian Matrix from endEffectorJacobianHW3 function and Transpose to Calculate Force and Torque
-- Add Force and Torque in the end-effector frame
+- Get Jacobian Matrix from endEffectorJacobianHW3 function and Transpose to Calculate Force and Torque and add Force and Torque in the end-effector frame
 - Calculate Force 
-- Calculate Torque
+- Calculate Torque with Jacobian
 - return joint Force and Torque as tau
 ## Reference
 
