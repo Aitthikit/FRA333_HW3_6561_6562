@@ -69,6 +69,38 @@ you can edit configulation space in this code at Input zone same line as Run Ans
 
 ![alt text](https://github.com/aitthikit/FRA333_HW3_6561_6562/blob/main/Picture/Input.png?raw=true)
 
+- q is array of joint include with [ joint1, joint2, joint3 ]   
+- w is wrench [ Fx, Fy, Fz, Mx, My, Mz ]  
+- ref is reference frame ( 0 is base, 1 is end-effector )
+
+Code 1 
+
+![alt text](https://github.com/Aitthikit/FRA333_HW3_6561_6562/blob/main/Picture/Code1_1.png?raw=true)
+- Receive the value q and ref to function 
+- Receive and Calculate Rotation Matrix and Translation Matrix from HW3_utils
+- Create Rotation axis vector y specifying the direction of rotation of each joint ( z_1, z_2, z_3)
+
+![alt text](https://github.com/Aitthikit/FRA333_HW3_6561_6562/blob/main/Picture/Code1_2.png?raw=true)
+- Calculate Jacobian Matrix by look at reference frame
+- Totol J_01, J_02, J_03 to Jacobian Matrix and return Matrix 6x3
+
+Code 2
+
+![alt text](https://github.com/Aitthikit/FRA333_HW3_6561_6562/blob/main/Picture/Code2.png?raw=true)
+- Get Jacobian Matrix from endEffectorJacobianHW3 function
+- Reduce Jacobian Matrix to Calculate determinant by using base.det
+- Check singularity by absolute value is less than 0.01 and return value
+( if value is 1 = singularity, 0 is not singularity)
+
+Code 3
+
+![alt text](https://github.com/Aitthikit/FRA333_HW3_6561_6562/blob/main/Picture/Code3.png?raw=true)
+- Receive input value of q , w , ref 
+- Get Jacobian Matrix from endEffectorJacobianHW3 function and Transpose to Calculate Force and Torque
+- Add Force and Torque in the end-effector frame
+- Calculate Force 
+- Calculate Torque
+- return joint Force and Torque as tau
 ## Reference
 
 - [Roboticstoolbox github](https://github.com/petercorke/robotics-toolbox-python)
