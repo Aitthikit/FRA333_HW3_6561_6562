@@ -12,6 +12,11 @@ import numpy as np
 from spatialmath import SE3,base
 from math import pi,radians
 import FRA333_HW3_6561_6562 as hand
+
+q = hand.q # Get q value from FRA333_HW3_6561_6562
+w = hand.w # Get w value from FRA333_HW3_6561_6562
+ref = hand.ref # Get ref value from FRA333_HW3_6561_6562
+
 # Config robot link
 d_1 = 0.0892
 a_2 = -0.425
@@ -44,6 +49,7 @@ def proofOne(q:list[float],robot:rtb.DHRobot,ref:int)->bool:
     print("-----------RTB Jacobian------------")
     print(J_ertb)
     print("------------Jacobian True or False------------")
+    print(np.allclose(J_e, J_ertb, atol=allow_error))
     return np.allclose(J_e, J_ertb, atol=allow_error) # Compare Jacobian Matrix from ans and from roboticstoolbox 
 #==============================================================================================================#
 #===========================================<ตรวจคำตอบข้อ 2>====================================================#
@@ -71,6 +77,7 @@ def proofTwo(q:list[float],robot:rtb.DHRobot,ref:int)->bool:
     print("-----------RTB Singularity------------")
     print(issingula_rtb)
     print("------------Singularity True or False------------")
+    print(issingula == issingula_rtb)
     return issingula == issingula_rtb #Compare Between checkSingularityHW3 and singularity_rtb
     
 #==============================================================================================================#
@@ -98,14 +105,29 @@ def proofThree(q:list[float], w:list[float],robot:rtb.DHRobot,ref:int)->bool:
     print("-----------RTB Effort------------")
     print(-tau_rtb)
     print("------------Effort True or False------------")
+    print(np.allclose(tau, -tau_rtb, atol=allow_error))
     return np.allclose(tau, -tau_rtb, atol=allow_error) # Compare tau from ans and from roboticstoolbox 
     # tau_rtb need to multiply -1 because in library roboticstoolbox use - Jacobian Matrix transpose(in rtbPay.png)
 #==============================================================================================================#
-q = hand.q # Get q value from FRA333_HW3_6561_6562
-w = hand.w # Get w value from FRA333_HW3_6561_6562
-ref = hand.ref # Get ref value from FRA333_HW3_6561_6562
-
-print(proofOne(q,robot,ref))
-print(proofTwo(q,robot,ref))
-print(proofThree(q,w,robot,ref))
+#===========================================Test Scripts====================================================#
+#code here
+def Alltestscript(qSample:int,w:list[float],robot:rtb.DHRobot,ref:int)->list[bool]:
+    theta1_range = np.linspace(-np.pi, np.pi, qSample)  # Joint 1 can rotate from -180 to 180 degrees
+    theta2_range = np.linspace(-np.pi, np.pi, qSample)  # Joint 2 can rotate from -180 to 180 degrees
+    theta3_range = np.linspace(-np.pi, np.pi, qSample)  # Joint 3 can rotate from -180 to 180 degrees
+    ans = [[],[],[]]
+    for theta1 in theta1_range:
+        for theta2 in theta2_range:
+            for theta3 in theta3_range:
+                q =[theta1,theta2,theta3]
+                ans[0].append(proofOne(q,robot,ref))
+                ans[1].append(proofTwo(q,robot,ref))
+                ans[2].append(proofThree(q,w,robot,ref))
+                
+    return ans
+#==============================================================================================================#
+print(Alltestscript(10,w,robot,0))# Test all function by use loop to find q in workspace !!!!!Careful อย่าปรับ qSample มากเกินไปเพราะมันจะทำให้จำนวณลูปเท่ากับ qSample ยกกำลังสาม!!!!!
+# print(proofOne(q,robot,ref))
+# print(proofTwo(q,robot,ref))
+# print(proofThree(q,w,robot,ref))
 #print each function output 
